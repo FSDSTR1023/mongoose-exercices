@@ -1,0 +1,19 @@
+{
+  "name": "mongoose-exercices",
+  "version": "1.0.0",
+  "description": "Con este ejemplo trabajaremos la conexión de nuestro backend con mongoose.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^8.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
