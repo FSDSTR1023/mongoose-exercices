@@ -10,7 +10,7 @@ const mongoDB = "mongodb+srv://"+process.env.DB_USER+":"+process.env.DB_PASSWORD
 async function main() {
   await mongoose.connect(mongoDB);
 }
-main().catch(err => console.log(err));
+main().catch(err => console.log(err)); 
 
 
 app.get('/', (req, res) => {
