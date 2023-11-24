@@ -2,6 +2,8 @@ const express = require('express')
 const app = express()
 const port = 8000
 
+app.use(express.json())
+
 require('dotenv').config();
 
 const mongoose = require("mongoose");
@@ -10,6 +12,9 @@ async function main() {
   await mongoose.connect(mongoDB);
 }
 main().catch(err => console.log(err));
+
+var students = require('./routes/students.js')
+app.use('/students', students)
 
 app.get('/', (req, res) => {
   console.log(process.env.DB_USER)
