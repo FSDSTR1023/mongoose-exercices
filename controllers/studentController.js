@@ -49,11 +49,11 @@ async function updateStudent(req,res) {
           $set: req.body
         },
         { 
-          new: true  //You should set the new option to true to return the document after update was applied.
+          new: true 
         }
       )
         .then(updatedStudent => {
-            console.log('Updated student: ', updateStudent)
+            console.log('Updated student: ', updatedStudent)
             res.status(200).json(studentDocs)
         } 
         )
@@ -62,10 +62,28 @@ async function updateStudent(req,res) {
             res.status(400).json(err)
         }
         );
+    }
+
+async function deleteStudent(req, res) {
+    Student.findByIdAndDelete(req.params.id) 
+        .then(deletedStudent => {
+            console.log('Deleted student with id: ', deletedStudent)
+            res.status(200).json(deletedStudent)
+            })
+        .catch(err => {
+            console.log('Error while deleting one student: ', err)
+            res.status(400).json(err)
+            }
+            );
 }
+
+
+
+
 module.exports = {
     createStudent,
     getStudents,
     getStudentById,
-    updateStudent
+    updateStudent,
+    deleteStudent
 }
