@@ -1,7 +1,34 @@
+# Quick start
+
+## Install dependencies
+
+```shell
+$ npm install
+```
+
+## Add env variables
+
+Get .env.template file and rename it to .env and add your own data variables
+
+```
+DB_USER="user"
+DB_PASSWORD="password"
+DB_NAME="db"
+DB_SERVER="server"
+```
+
+## Run the app
+
+```shell
+$ npm run dev
+```
+
 # Introducción a Mongoose
-Con este ejemplo trabajaremos la conexión de nuestro backend con mongoose. 
+
+Con este ejemplo trabajaremos la conexión de nuestro backend con mongoose.
 
 ## Instalación de mongoose
+
 ```shell
 $ npm init -y
 $ npm install express
@@ -14,6 +41,7 @@ $ npm install nodemon --save-dev
 Para no guardar datos sensibles en el repositorio, utilizaremos las variables de entorno. Nos permitirán que cada desarrollador o cada entorno pueda tener sus propios datos y ser utilizados dentro del código. Estas variables de entorno se almacenan en un fichero `.env`
 
 `.env`
+
 ```
 DB_USER="user"
 DB_PASSWORD="password"
@@ -28,24 +56,37 @@ $ npm install dotenv
 ```
 
 `app.js`
+
 ```js
-require('dotenv').config();
+require("dotenv").config();
 ```
 
 Las variables de entorno quedarán accesibles a través de la variable `process.env`
 
 ## Preparar conexión con MongoDB Atlas
+
 `app.js`
+
 ```js
 const mongoose = require("mongoose");
-const mongoDB = "mongodb+srv://"+process.env.DB_USER+":"+process.env.DB_PASSWORD+"@"+process.env.DB_SERVER+"/"+process.env.DB_NAME+"?retryWrites=true&w=majority";
+const mongoDB =
+  "mongodb+srv://" +
+  process.env.DB_USER +
+  ":" +
+  process.env.DB_PASSWORD +
+  "@" +
+  process.env.DB_SERVER +
+  "/" +
+  process.env.DB_NAME +
+  "?retryWrites=true&w=majority";
 async function main() {
   await mongoose.connect(mongoDB);
 }
-main().catch(err => console.log(err));
+main().catch((err) => console.log(err));
 ```
 
 ## Crear estructura de ficheros (scaffolding)
+
 Estructuraremos los directorios de la siguiente forma:
 
 ```
@@ -54,21 +95,23 @@ Estructuraremos los directorios de la siguiente forma:
 ├── controllers
 └── routes
 ```
+
 ## Iteraciones
 
 ### Iteración #1
+
 Crear un modelo en `models` para alumnos en un fichero `student.model.js`. Este modelo tendrá los siguientes campos
 
-| Field       | Type        |
-| ----------- | ----------- |
-| first_name  | String      |
-| last_name   | String      |
-| birthyear   | Number      |
+| Field      | Type   |
+| ---------- | ------ |
+| first_name | String |
+| last_name  | String |
+| birthyear  | Number |
 
 `models\student.model.js`
 
 ```js
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 // here we are getting access to Schema class from mongoose
 const Schema = mongoose.Schema;
@@ -88,95 +131,114 @@ module.exports = mongoose.model("Student", studentSchema);
 ```
 
 ### Iteración #2
+
 Insertar vuestros datos (o inventados) en nuestra base de datos
 
 ```js
-Student.create({ first_name: 'Pepe', last_name: 'López', birthyear: 1978 })
-  .then(studentDoc => console.log(`Student create worked well: ${studentDoc}`))
-  .catch(error =>
+Student.create({ first_name: "Pepe", last_name: "López", birthyear: 1978 })
+  .then((studentDoc) =>
+    console.log(`Student create worked well: ${studentDoc}`)
+  )
+  .catch((error) =>
     console.log(`Creating a new student went wrong! Try again 😞 ${err}`)
   );
 ```
 
 ### Iteración #3
+
 Insertar varios alumnos a la vez
 
 ```js
 Student.create([
-    { first_name: 'Pepe', last_name: 'López', birthyear: 1978 },
-    { first_name: 'Marta', last_name: 'Fernández', birthyear: 1982 }
+  { first_name: "Pepe", last_name: "López", birthyear: 1978 },
+  { first_name: "Marta", last_name: "Fernández", birthyear: 1982 },
 ])
-  .then(studentDocs => console.log(`Multiple students created: ${studentDocs}`))
-  .catch(error =>
+  .then((studentDocs) =>
+    console.log(`Multiple students created: ${studentDocs}`)
+  )
+  .catch((error) =>
     console.log(`Creating a new student went wrong! Try again 😞 ${err}`)
   );
 ```
 
 ### Iteración #4
+
 Obtener la lista de alumnos
 
 ```js
 Student.find()
-  .then(studentDocs => console.log('Found this: ', studentDocs))
-  .catch(err => console.log('Error while getting the students: ', err));
+  .then((studentDocs) => console.log("Found this: ", studentDocs))
+  .catch((err) => console.log("Error while getting the students: ", err));
 ```
 
 ### Iteración #5
+
 Obtener la lista de alumnos filtrado por nacidos después de 1980
 
 ```js
 Student.find({ birthyear: { $gt: 1980 } })
-  .then(studentDocs => console.log('Found this 🐈: ', studentDocs))
-  .catch(err => console.log('Error while getting the students: ', err));
+  .then((studentDocs) => console.log("Found this 🐈: ", studentDocs))
+  .catch((err) => console.log("Error while getting the students: ", err));
 ```
 
 ### Iteración #6
+
 Obtener un alumno por Id
+
 ```js
-Student.findById('123456789abcdef')
-  .then(studentDoc => console.log('Found this student by their ID: ', studentDoc))
-  .catch(err => console.log('Error while getting the students: ', err));
+Student.findById("123456789abcdef")
+  .then((studentDoc) =>
+    console.log("Found this student by their ID: ", studentDoc)
+  )
+  .catch((err) => console.log("Error while getting the students: ", err));
 ```
 
 ### Iteración #7
+
 Contar documentos
+
 ```js
-Student.countDocuments({ first_name: 'Pepe' })
-  .then(total =>
-    console.log('Total number of students with name Pepe: ', total)
+Student.countDocuments({ first_name: "Pepe" })
+  .then((total) =>
+    console.log("Total number of students with name Pepe: ", total)
   )
-  .catch(err => console.log('Error while counting the students: ', err));
+  .catch((err) => console.log("Error while counting the students: ", err));
 ```
 
 ### Iteración #8
+
 Modificar un documento a partir de su Id
+
 ```js
 Student.findByIdAndUpdate(
-  '123456789abcdef',
+  "123456789abcdef",
   {
-    $set: { first_name: 'Pablo', birthyear: 1986 }
+    $set: { first_name: "Pablo", birthyear: 1986 },
   },
-  { 
-    new: true  //You should set the new option to true to return the document after update was applied.
+  {
+    new: true, //You should set the new option to true to return the document after update was applied.
   }
 )
-  .then(updatedStudent => console.log('Updated student: ', updatedStudent))
-  .catch(err => console.log('Error while updating the student: ', err));
+  .then((updatedStudent) => console.log("Updated student: ", updatedStudent))
+  .catch((err) => console.log("Error while updating the student: ", err));
 ```
 
 ### Iteración #9
+
 Modificar varios documentos a partir de su nombre
 
 ```js
 // Update all students named Pepe
-Student.updateMany({ first_name: 'Pepe' }, { $inc: { birthyear: 1 } }) // birthyear = birthyear + 1
-  .then(updatedStudents => console.log('Updated students: ', updatedStudents))
-  .catch(err => console.log('Error while updating students: ', err));
+Student.updateMany({ first_name: "Pepe" }, { $inc: { birthyear: 1 } }) // birthyear = birthyear + 1
+  .then((updatedStudents) => console.log("Updated students: ", updatedStudents))
+  .catch((err) => console.log("Error while updating students: ", err));
 ```
 
 ### Iteración #10
+
 Buscar un documento para modificar, si no lo encuentra, insertar uno nuevo
 Modificar un documento a partir de su Id
+
 ```js
 const filter = { first_name: 'Pepe' };
 const update = { first_name: 'Anna', last_name: 'Martínez', birthday: 2001 };
@@ -184,7 +246,7 @@ const update = { first_name: 'Anna', last_name: 'Martínez', birthday: 2001 };
 Student.findOneAndUpdate(
   filter,
   update,
-  { 
+  {
     new: true  //You should set the new option to true to return the document after update was applied.
     upsert: true // Make this update into an upsert. If no document matches filter, MongoDB will insert one by combining filter and update as shown below.
   }
@@ -196,57 +258,62 @@ Student.findOneAndUpdate(
 Si por alguna razón se desea reemplazar todos los datos, existe el método `findOneAndReplace`, que mantendrá la id.
 
 ### Iteración #11
+
 Eliminar un documento a partir de su Id
+
 ```js
-Student.findByIdAndDelete('123456789abcdef') // .findByIdAndRemove() works the same as .findByIdAndDelete()
-  .then(deletedStudent => console.log(`Deleted student with id: ${deletedStudent._id}`))
-  .catch(err => console.log('Error while deleting one student: ', err));
+Student.findByIdAndDelete("123456789abcdef") // .findByIdAndRemove() works the same as .findByIdAndDelete()
+  .then((deletedStudent) =>
+    console.log(`Deleted student with id: ${deletedStudent._id}`)
+  )
+  .catch((err) => console.log("Error while deleting one student: ", err));
 ```
 
 ### Iteración #12
+
 Eliminar varios documentos a partir de su nombre
+
 ```js
-Student.deleteMany({ name: 'Pepe' })
-  .then(deletedStudents => {
-    console.log('deleted: ', deletedStudents);
+Student.deleteMany({ name: "Pepe" })
+  .then((deletedStudents) => {
+    console.log("deleted: ", deletedStudents);
     // deletedStudents.forEach(oneStudent =>  console.log(`Deleted student with id: ${oneStudent._id}`));
   })
-  .catch(err => console.log('Error while deleting one student: ', err));
+  .catch((err) => console.log("Error while deleting one student: ", err));
 ```
 
 ### Iteración #13
+
 Definir validación de datos en el modelo
 
-| Field       | Type        | Validación                      |
-| ----------- | ----------- | ------------------------------- |
-| first_name  | String      | Requerido. Min 2 carácteres     |
-| last_name   | String      | Requerido. Min 2 carácteres     |
-| birthyear   | Number      | Requerido. Min: 1900. Max: 2020 |
-
+| Field      | Type   | Validación                      |
+| ---------- | ------ | ------------------------------- |
+| first_name | String | Requerido. Min 2 carácteres     |
+| last_name  | String | Requerido. Min 2 carácteres     |
+| birthyear  | Number | Requerido. Min: 1900. Max: 2020 |
 
 `models\student.model.js`
 
 ```js
 const studentSchema = new Schema({
-  first_name: { 
-    type: String, 
+  first_name: {
+    type: String,
     required: true,
     minLength: 2,
-    },
-  last_name: { 
-    type: String, 
+  },
+  last_name: {
+    type: String,
     required: true,
     minLength: 2,
-    },
-  birthyear: { 
-    type: Number, 
+  },
+  birthyear: {
+    type: Number,
     required: true,
     min: 1900,
     max: 1900,
-    },
+  },
 });
 ```
-
 
 Validaciones: https://mongoosejs.com/docs/validation.html
 
@@ -276,27 +343,29 @@ Date
 - max: Date, creates a validator that checks if the value is less than or equal to the given maximum.
 
 ### Iteración #14
+
 Cerrar conexión con base de datos
 
 ```js
-mongoose.connection.close()
+mongoose.connection.close();
 ```
 
 ### Iteración #15
+
 Asociar alumnos con un master
 
 Primero de todo necesitaremos crear un modelo para los masters
 
-| Field       | Type        |
-| ----------- | ----------- |
-| name        | String      |
-| year        | Number      |
-| description | String      |
+| Field       | Type   |
+| ----------- | ------ |
+| name        | String |
+| year        | Number |
+| description | String |
 
 `models\master.model.js`
 
 ```js
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 // here we are getting access to Schema class from mongoose
 const Schema = mongoose.Schema;
@@ -324,17 +393,17 @@ masterId: {type: mongoose.Schema.Types.ObjectId, ref: 'Master'},
 ```
 
 ### Iteración #16
+
 Obtener lista alumnos con información del master
 
 ```js
 Student.find()
-  .populate('regionId')
-  .then(studentDocs => console.log('Found this: ', studentDocs))
-  .catch(err => console.log('Error while getting the students: ', err));
+  .populate("regionId")
+  .then((studentDocs) => console.log("Found this: ", studentDocs))
+  .catch((err) => console.log("Error while getting the students: ", err));
 ```
 
 ## FAQs
-
 
 <details>
   <summary>Estoy atascado y no sé cómo resolver el problema o por dónde empezar. ¿Qué tengo que hacer?</summary>
@@ -356,30 +425,31 @@ Una vez que tengas una comprensión clara del problema, podrás comenzar a traba
 
 <br>
 
-Cuando trabajes con Promesas o una *función que devuelve una promesa*, puedes adjuntar el método `.then()` para manejar el valor resuelto y un método `catch()` para manejar el posible valor de rechazo.
+Cuando trabajes con Promesas o una _función que devuelve una promesa_, puedes adjuntar el método `.then()` para manejar el valor resuelto y un método `catch()` para manejar el posible valor de rechazo.
 
 Aquí hay un ejemplo de cómo usar `.then()` y `.catch()` para manejar una promesa simple:
 
 ```js
 myPromise
-    .then((result) => {
+  .then((result) => {
     console.log(result);
-    })
-    .catch((error) => {
+  })
+  .catch((error) => {
     console.log(error);
-    })
+  });
 ```
 
 Aquí hay un ejemplo del uso de `.then()` y `.catch()` para manejar una promesa devuelta por una función/método:
 
 ```js
-someAPI.getData()
-    .then((result) => {
+someAPI
+  .getData()
+  .then((result) => {
     console.log(result);
-    })
-    .catch((error) => {
+  })
+  .catch((error) => {
     console.log(error);
-    })
+  });
 ```
 
 Si estás intentando ejecutar varias promesas en una secuencia, puedes hacerlo devolviendo una promesa desde un bloque `.then()`. Ejemplo:
@@ -420,13 +490,12 @@ Cuando usamos una función `async` para manejar código asíncrono (por ejemplo,
 
 ```js
 async function doSomething() {
-    try {
+  try {
     // Code that will be executed asynchronously
     // that might throw an error
-    }
-    catch (error) {
+  } catch (error) {
     // Handle the error
-    }
+  }
 }
 ```
 
@@ -436,14 +505,15 @@ Aquí hay un ejemplo del uso de `await` dentro de una función `async` para espe
 
 ```js
 async function getData() {
-try {
-    let response = await fetch('https://api.github.com/search/repositories?q=js');
+  try {
+    let response = await fetch(
+      "https://api.github.com/search/repositories?q=js"
+    );
     let data = await response.json();
     console.log(data);
-}
-catch (error) {
+  } catch (error) {
     // error handling
-} 
+  }
 }
 ```
 
@@ -455,7 +525,7 @@ La función usa la palabra clave `return` para devolver los `datos` para permiti
 
 ##### Una función `async` siempre devuelve una Promise
 
-La diferencia entre una *función regular* y una función `async` es que la función **`async` siempre devuelve una Promesa**.
+La diferencia entre una _función regular_ y una función `async` es que la función **`async` siempre devuelve una Promesa**.
 
 Una vez definida, puede invocar una función `async` como una función normal y **manejar la Promesa que devuelve usando `.then()` y `.catch()` o `await`**.
 
@@ -463,38 +533,37 @@ Aquí hay un ejemplo del uso de `then` y `catch` para manejar una Promesa devuel
 
 ```js
 async function greeting() {
-// An `async` function always returns a promise
-// This value will be returned as a Promise
-return "HELLO IRONHACKERS!";
+  // An `async` function always returns a promise
+  // This value will be returned as a Promise
+  return "HELLO IRONHACKERS!";
 }
 
 greeting()
-.then((result) => {
+  .then((result) => {
     console.log(result);
-})
-.catch((error) => {
+  })
+  .catch((error) => {
     console.log("Error:", error);
-})
+  });
 ```
 
 Aquí hay un ejemplo del manejo de la misma función `async` pero esta vez usando `await`:
 
 ```js
 async function greeting() {
-// Async function always returns a promise
-// This value will be returned as a Promise
-return "HELLO WORLD!";
+  // Async function always returns a promise
+  // This value will be returned as a Promise
+  return "HELLO WORLD!";
 }
 
 // We need another wrapper `async` function so that we can use `await`
 async function wrapperFunction() {
-try {
-    const result = await greeting()
+  try {
+    const result = await greeting();
     console.log(result);
-}
-catch (error) {
+  } catch (error) {
     console.log("Error:", error);
-}
+  }
 }
 ```
 
@@ -517,9 +586,9 @@ Aquí hay un ejemplo del uso de un bloque `try`/`catch`:
 
 ```js
 try {
-// Code that might throw an error
+  // Code that might throw an error
 } catch (error) {
-// Handle the error
+  // Handle the error
 }
 ```
 
@@ -529,16 +598,13 @@ Aquí hay un ejemplo del uso de un bloque `try`/`catch` en una función `async` 
 
 ```js
 async function doSomething() {
-
-try {
+  try {
     // Code that might throw an error
     const result = await someAsyncFunction();
-}
-catch (error) {
+  } catch (error) {
     // Handle the error
     console.error(error);
-}
-
+  }
 }
 ```
 
@@ -558,11 +624,11 @@ El error "Cannot find module" en una aplicación de Node.js significa que el mó
 Hay algunas cosas que puedes intentar para resolver el problema:
 
 1. **Las dependencias no están instaladas**: asegúrate de que todas las dependencias estén instaladas.
-Para hacer esto, ejecuta el comando `npm install` en la carpeta raíz de su proyecto.
-Esto instalará todas las dependencias enumeradas en el archivo `package.json` del proyecto y garantizará que todos los módulos que requiere su aplicación Node'js estén disponibles.
-2. **El módulo no está instalado**: asegúrate de que el *paquete* que está tratando de usar esté incluido en el `paquete.json` del proyecto y que esté instalado.
-Para hacer esto, ejecuta el comando `npm install <package_name>`, reemplazando `<package_name>` con el nombre del paquete.
-Esto agregará el paquete a la lista de dependencias en el archivo `package.json` y lo instalará en el proyecto.
+   Para hacer esto, ejecuta el comando `npm install` en la carpeta raíz de su proyecto.
+   Esto instalará todas las dependencias enumeradas en el archivo `package.json` del proyecto y garantizará que todos los módulos que requiere su aplicación Node'js estén disponibles.
+2. **El módulo no está instalado**: asegúrate de que el _paquete_ que está tratando de usar esté incluido en el `paquete.json` del proyecto y que esté instalado.
+   Para hacer esto, ejecuta el comando `npm install <package_name>`, reemplazando `<package_name>` con el nombre del paquete.
+   Esto agregará el paquete a la lista de dependencias en el archivo `package.json` y lo instalará en el proyecto.
 3. **El módulo no está importado:** Asegúrate de haber importado el módulo/paquete correctamente y de que la instrucción `require` esté escrita correctamente y disponible en el lugar correcto en su código.
 4. **Ruta de archivo incorrecta:** Si está importando otro archivo como un módulo, asegúrate de que el archivo que está tratando de solicitar esté ubicado en la carpeta correcta y que estés utilizando la ruta de archivo correcta.
 5. **Nombre de módulo/paquete incorrecto:** Verifica la ortografía del nombre del paquete que estás tratando de importar.
@@ -587,7 +653,7 @@ Para eliminar el proceso que se ejecuta en el puerto `3000`, ejecuta el siguient
 sudo kill -9 $(lsof -t -i:3000)
 ```
 
-**Importante:** Reemplaza el puerto de ejemplo anterior *3000* con el número de puerto del proceso que estás tratando de eliminar.
+**Importante:** Reemplaza el puerto de ejemplo anterior _3000_ con el número de puerto del proceso que estás tratando de eliminar.
 
 #### En Windows
 
@@ -595,7 +661,7 @@ sudo kill -9 $(lsof -t -i:3000)
 
 Para eliminar el proceso en ejecución en Windows usando el Administrador de tareas, haz lo siguiente:
 
-1. Abre el **Administrador de tareas** presionando: **<kbd>Ctrl</kbd>** + **<kbd>Shift</kbd>** + **<kbd>Esc</kbd>* *
+1. Abre el **Administrador de tareas** presionando: **<kbd>Ctrl</kbd>** + **<kbd>Shift</kbd>** + \*_<kbd>Esc</kbd>_ \*
 2. Busca el proceso de Nodo que deseas finalizar.
 3. Haz clic derecho y seleccione **Finalizar tarea**
 
@@ -620,7 +686,7 @@ Esto devolverá la identificación del proceso (PID). Luego debes ejecutar el si
 taskkill /PID 12345 /f
 ```
 
-**Importante:** Reemplaza el PID de ejemplo anterior *12345*, con el ID de proceso (PID) que obtuviste en el paso anterior.
+**Importante:** Reemplaza el PID de ejemplo anterior _12345_, con el ID de proceso (PID) que obtuviste en el paso anterior.
 
 [Volver arriba](#faqs)
 
@@ -639,10 +705,10 @@ Para solucionar el problema, debes eliminar el proceso usando el puerto y luego 
 Para eliminar el proceso que se ejecuta en el puerto `3000`, ejecuta el siguiente comando en la terminal:
 
 ```bash
-sudo kill -9 $(lsof -t -i:3000)   
+sudo kill -9 $(lsof -t -i:3000)
 ```
 
-**Importante:** Reemplaza el puerto de ejemplo anterior *3000* con el número de puerto del proceso que estás tratando de eliminar.
+**Importante:** Reemplaza el puerto de ejemplo anterior _3000_ con el número de puerto del proceso que estás tratando de eliminar.
 
 #### En Windows
 
@@ -650,7 +716,7 @@ sudo kill -9 $(lsof -t -i:3000)
 
 Para eliminar el proceso en ejecución en Windows usando el Administrador de tareas, haz lo siguiente:
 
-1. Abre el **Administrador de tareas** presionando: **<kbd>Ctrl</kbd>** + **<kbd>Shift</kbd>** + **<kbd>Esc</kbd>* *
+1. Abre el **Administrador de tareas** presionando: **<kbd>Ctrl</kbd>** + **<kbd>Shift</kbd>** + \*_<kbd>Esc</kbd>_ \*
 2. Busca el proceso de Nodo que desea finalizar.
 3. Haz clic derecho y seleccione **Finalizar tarea**
 
@@ -675,7 +741,7 @@ Esto devolverá la identificación del proceso (PID). Luego debes ejecutar el si
 taskkill /PID 12345 /f
 ```
 
-**Importante:** Reemplaza el PID de ejemplo anterior *12345*, con el ID de proceso (PID) que obtuviste en el paso anterior.
+**Importante:** Reemplaza el PID de ejemplo anterior _12345_, con el ID de proceso (PID) que obtuviste en el paso anterior.
 
 [Volver arriba](#faqs)
 
@@ -734,11 +800,11 @@ Luego ejecute el comando de inicio anterior nuevamente.
 
 **En Windows:**
 
-Para abrir el proceso *MongoDB* en Windows, deberás seguir estos pasos:
+Para abrir el proceso _MongoDB_ en Windows, deberás seguir estos pasos:
 
-- Ve a tus *Archivos de programa* en tu unidad *C:* - el disco local
-- En *Archivos de programa* ve a la carpeta *MongoDB*
-- Dentro de la carpeta *MongoDB*, sigue esta ruta `Server/4.4/bin`. El número de versión de su sistema (`4.4`) puede ser ligeramente diferente para las instalaciones más nuevas.
+- Ve a tus _Archivos de programa_ en tu unidad _C:_ - el disco local
+- En _Archivos de programa_ ve a la carpeta _MongoDB_
+- Dentro de la carpeta _MongoDB_, sigue esta ruta `Server/4.4/bin`. El número de versión de su sistema (`4.4`) puede ser ligeramente diferente para las instalaciones más nuevas.
 - Haz doble clic en el archivo llamado **mongod.exe**.
 
     <details style="font-size: 14px; cursor: pointer; outline: none;">
@@ -749,7 +815,7 @@ Para abrir el proceso *MongoDB* en Windows, deberás seguir estos pasos:
     ![](https://education-team-2020.s3.eu-west-1.amazonaws.com/web-dev/prework/installations/win-installations-bootcamp-mongo-03.png)
 
     </details>
-   
+
 [Volver arriba](#faqs)
 
 </details>
@@ -810,11 +876,11 @@ Luego ejecuta el comando de inicio anterior nuevamente.
 
 **En Windows:**
 
-Para abrir el proceso *MongoDB* en Windows, deberás seguir estos pasos:
+Para abrir el proceso _MongoDB_ en Windows, deberás seguir estos pasos:
 
-- Ve a tus *Archivos de programa* en tu unidad *C:* - el disco local
-- En *Archivos de programa* ve a la carpeta *MongoDB*
-- Dentro de la carpeta *MongoDB*, sigue esta ruta `Server/4.4/bin`. El número de versión de su sistema (`4.4`) puede ser ligeramente diferente para las instalaciones más nuevas.
+- Ve a tus _Archivos de programa_ en tu unidad _C:_ - el disco local
+- En _Archivos de programa_ ve a la carpeta _MongoDB_
+- Dentro de la carpeta _MongoDB_, sigue esta ruta `Server/4.4/bin`. El número de versión de su sistema (`4.4`) puede ser ligeramente diferente para las instalaciones más nuevas.
 - Haz doble clic en el archivo llamado **mongod.exe**.
 
     <details style="font-size: 14px; cursor: pointer; outline: none;">
@@ -843,9 +909,9 @@ Aquí hay un ejemplo de cómo crear un modelo de `Usuario` para administrar docu
 const mongoose = require("mongoose");
 
 // CREATE A SCHEMA - defines the shape of the documents
-const userSchema = new mongoose.Schema({ 
-firstName: String,
-lastName: String 
+const userSchema = new mongoose.Schema({
+  firstName: String,
+  lastName: String,
 });
 
 // CREATE THE MODEL
@@ -862,7 +928,7 @@ Analicemos el ejemplo anterior y los pasos para crear un modelo de mangosta:
 1. **Importar Mongoose:** El primer paso es importar la biblioteca `mongoose`.
 2. **Crear un esquema:** El siguiente paso es crear un esquema, que define la forma de los documentos que se almacenarán en la colección `users`. En el ejemplo anterior, el esquema tiene dos campos `firstName` y `lastName` que son cadenas.
 3. **Crear el modelo**: El último paso es crear el modelo. Esto se hace usando el método `mongoose.model()` , que toma dos argumentos: el nombre del modelo, en este caso `'Usuario'` y el esquema que debería usar.
-Mongoose automáticamente pluraliza y convierte a minúsculas el nombre del modelo provisto y lo usa como el nombre de la colección. En este caso, la cadena `'Usuario'` se convierte automáticamente en un nombre de colección -> `usuarios`.
+   Mongoose automáticamente pluraliza y convierte a minúsculas el nombre del modelo provisto y lo usa como el nombre de la colección. En este caso, la cadena `'Usuario'` se convierte automáticamente en un nombre de colección -> `usuarios`.
 4. **Exportar el modelo:** Después de crear el modelo, debe exportarse para poder usarlo en otras partes de la aplicación.
 
 [Volver arriba](#faqs)
@@ -887,7 +953,6 @@ Para corregir este error, asegúrate de proporcionar un valor para todos los cam
 
 <br>
 
-
 El error "ReferenceError: la variable no está definida" en JavaScript ocurre cuando intenta acceder a una variable o una función que aún no se ha definido o está fuera del alcance.
 Para solucionar el problema, verifique que haya definido la variable o función que está tratando de usar y vuelva a verificar la ortografía para asegurarse de que está usando el nombre correcto.
 En caso de que la variable o una función esté definida en otro archivo, asegúrese de que el archivo se haya importado o cargado correctamente.
@@ -902,7 +967,6 @@ En caso de que la variable o una función esté definida en otro archivo, asegú
 <br>
 
 Asegúrate de tener `nodemon` instalado globalmente:
-
 
 ```bash
 npm install -g nodemon
@@ -919,7 +983,7 @@ Esto instalará nodemon globalmente en su sistema, haciéndolo disponible para t
 
 <br>
 
-Hay un par de razones posibles por las que es posible que no puedas hacer *push* a un repositorio de Git:
+Hay un par de razones posibles por las que es posible que no puedas hacer _push_ a un repositorio de Git:
 
 1. **No has confirmado sus cambios:** Antes de que pueda enviar sus cambios al repositorio, debes confirmarlos con el comando `git commit`. Asegúrate de haber confirmado sus cambios e intente presionar nuevamente. Para hacer esto, ejecuta los siguientes comandos de terminal desde la carpeta del proyecto:
 
@@ -929,8 +993,8 @@ git commit -m "Your commit message"
 git push
 ```
 
-2. **No tienes permiso para subir al repositorio:** Si has clonado el repositorio directamente desde el repositorio principal de Ironhack sin hacer un *Fork* primero, no tienes acceso de escritura al repositorio.
-Para verificar qué repositorio remoto ha clonado, ejecuta el siguiente comando de terminal desde la carpeta del proyecto:
+2. **No tienes permiso para subir al repositorio:** Si has clonado el repositorio directamente desde el repositorio principal de Ironhack sin hacer un _Fork_ primero, no tienes acceso de escritura al repositorio.
+   Para verificar qué repositorio remoto ha clonado, ejecuta el siguiente comando de terminal desde la carpeta del proyecto:
 
 ```bash
 git remote -v
