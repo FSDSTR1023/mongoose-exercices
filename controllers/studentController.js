@@ -1,4 +1,5 @@
 const Student = require("../models/student.model");
+require("../models/master.model");
 
 async function createStudent(req, res) {
   Student.create(req.body)
@@ -25,24 +26,9 @@ async function getStudentById(req, res) {
 }
 
 async function getStudents(req, res) {
-  //get query paramter
-
-  const { year, first_name, last_name } = req.query;
-
-  const filter = {};
-  if (year) {
-    filter.birthyear = { $gte: year };
-  }
-
-  if (first_name) {
-    filter.first_name = first_name;
-  }
-
-  if (last_name) {
-    filter.last_name = last_name;
-  }
-
-  Student.find(filter)
+  Student.find(req.filter)
+    .populate("masterId")
+    .exec()
     .then((studentDocs) => {
       console.log("Found this: ", studentDocs);
       res.status(200).json(studentDocs);
@@ -82,13 +68,53 @@ async function updateStudent(req, res) {
 }
 
 async function massiveUpdate(req, res) {
-  Student.updateMany(req.body, { $inc: { birthyear: 1 } }) // birthyear = birthyear + 1
+  Student.updateMany(req.filter, { $set: req.body }) // birthyear = birthyear + 1
     .then((updatedStudents) => {
       console.log("Updated students: ", updatedStudents);
       res.status(200).json(updatedStudents);
     })
     .catch((err) => {
       console.log("Error while updating students: ", err);
+      res.status(400).json(err);
+    });
+}
+
+async function updateOrCreate(req, res) {
+  Student.findOneAndUpdate(
+    filter,
+    { $set: { ...req.body, ...req.filter } },
+    { new: true, upsert: true }
+  ) // birthyear = birthyear + 1
+    .then((updatedStudent) => {
+      console.log("Updated students: ", updatedStudent);
+      res.status(200).json(updatedStudent);
+    })
+    .catch((err) => {
+      console.log("Error while updating students: ", err);
+      res.status(400).json(err);
+    });
+}
+
+async function deleteStudent(req, res) {
+  Student.findByIdAndDelete(req.params.id)
+    .then((deletedStudent) => {
+      console.log("Deleted student: ", deletedStudent);
+      res.status(200).json(deletedStudent);
+    })
+    .catch((err) => {
+      console.log("Error while deleting the student: ", err);
+      res.status(400).json(err);
+    });
+}
+
+async function deleteStudents(req, res) {
+  Student.deleteMany(req.filter)
+    .then((deletedStudents) => {
+      console.log("Deleted students: ", deletedStudents);
+      res.status(200).json(deletedStudents);
+    })
+    .catch((err) => {
+      console.log("Error while deleting the students: ", err);
       res.status(400).json(err);
     });
 }
@@ -100,4 +126,7 @@ module.exports = {
   updateStudent,
   massiveUpdate,
   getStudentsByYear,
+  updateOrCreate,
+  deleteStudent,
+  deleteStudents,
 };
