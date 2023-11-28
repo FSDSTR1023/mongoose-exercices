@@ -1,3 +1,12 @@
+# Quick start
+1. npm install
+
+# Add env variables
+Get .env.template file and rename it to .env and add your own data variables.
+
+# run the app
+1. npm run dev
+
 # Introducción a Mongoose
 Con este ejemplo trabajaremos la conexión de nuestro backend con mongoose. 
 
